@@ -101,11 +101,8 @@ public class CadastroActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    Toast.makeText(
-                            CadastroActivity.this,
-                            "Sucesso ao cadastrar usuário.",
-                            Toast.LENGTH_SHORT
-                    ).show();
+                    //fecha esta activity e exibe a que está na stack(pilha) - intro_cadastro
+                    finish();
                 } else {
 
                     String excecao = "";
@@ -115,7 +112,7 @@ public class CadastroActivity extends AppCompatActivity {
                     } catch (FirebaseAuthWeakPasswordException e) {
                         excecao = "Digite uma senha forte!";
                     } catch (FirebaseAuthInvalidCredentialsException e) {
-                        excecao = "Digite ume-mail valido";
+                        excecao = "Digite um e-mail valido";
                     } catch (FirebaseAuthUserCollisionException e) {
                         excecao = "Essa conta já foi cadastrada";
                     } catch (Exception e) {
