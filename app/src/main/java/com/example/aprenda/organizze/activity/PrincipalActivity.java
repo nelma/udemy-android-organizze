@@ -14,6 +14,9 @@ import com.example.aprenda.organizze.R;
 
 public class PrincipalActivity extends AppCompatActivity {
 
+    private boolean isFABOpen = false;
+    private FloatingActionButton fab2, fab3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,13 +25,50 @@ public class PrincipalActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        fab2 = findViewById(R.id.fab_receita);
+        fab3 = findViewById(R.id.fab_despesa);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(!isFABOpen) {
+                    showFABMenu();
+                } else {
+                    closeFABMenu();
+                }
             }
         });
+
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+    }
+
+    private void showFABMenu() {
+        isFABOpen = true;
+
+        fab2.animate().translationY(-getResources().getDimension(R.dimen.standart_55));
+        fab3.animate().translationY(-getResources().getDimension(R.dimen.standart_105));
+    }
+
+    private void closeFABMenu() {
+        isFABOpen = false;
+
+        fab2.animate().translationY(0);
+        fab3.animate().translationY(0);
+    }
+
+    public void adicionarReceita(View view) {
+
+    }
+
+    public void adicionarDespesa(View view) {
+
     }
 
 }
