@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.aprenda.organizze.R;
 import com.example.aprenda.organizze.config.ConfiguracaoFirebase;
+import com.example.aprenda.organizze.helpers.Base64Custom;
 import com.example.aprenda.organizze.model.Usuario;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,6 +102,11 @@ public class CadastroActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+
+                    String idUsuario = Base64Custom.codificarBase64(usuario.getEmail());
+                    usuario.setIdUsuario(idUsuario);
+                    usuario.salvar();
+
                     //fecha esta activity e exibe a que está na stack(pilha) - intro_cadastro
                     finish();
                 } else {
