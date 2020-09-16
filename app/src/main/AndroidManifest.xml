@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DespesaActivity"
+        <activity android:name=".activity.DespesaActivity"
             android:theme="@style/DespesTheme"></activity>
         <activity android:name=".activity.ReceitaActivity"
             android:theme="@style/ReceitaTheme"/>
