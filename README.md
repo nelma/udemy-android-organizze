@@ -8,3 +8,4 @@ Foi desenvolvido para estudo da plataforma Android
 Dependências:
 - Firebase
 - https://github.com/heinrichreimer/material-intro
+- CalendarView: https://github.com/prolificinteractive/material-calendarview
