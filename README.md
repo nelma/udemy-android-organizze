@@ -9,3 +9,4 @@ Dependências:
 - Firebase
 - https://github.com/heinrichreimer/material-intro
 - CalendarView: https://github.com/prolificinteractive/material-calendarview
+- Como criar uma RecyclerView: https://developer.android.com/guide/topics/ui/layout/recyclerview?hl=pt-br
