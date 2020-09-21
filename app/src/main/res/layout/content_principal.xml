@@ -55,8 +55,9 @@
         app:mcv_selectionColor="#00F"
         app:mcv_tileSize="50dp"/>
 
-<!--    <android.support.v7.widget.RecyclerView-->
-<!--        android:id="@+id/recycler_movimentos"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent" />-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

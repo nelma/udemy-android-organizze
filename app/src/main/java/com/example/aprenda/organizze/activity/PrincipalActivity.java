@@ -3,14 +3,18 @@ package com.example.aprenda.organizze.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.example.aprenda.organizze.adapter.AdapterMovimentacao;
 import com.example.aprenda.organizze.config.ConfiguracaoFirebase;
 import com.example.aprenda.organizze.helpers.Base64Custom;
+import com.example.aprenda.organizze.model.Movimentacao;
 import com.example.aprenda.organizze.model.Usuario;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.Menu;
@@ -29,6 +33,8 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PrincipalActivity extends AppCompatActivity {
 
@@ -40,6 +46,9 @@ public class PrincipalActivity extends AppCompatActivity {
     private Double despesaTotal = 0.0;
     private Double receitaTotal = 0.0;
     private Double resumo = 0.0;
+    private RecyclerView recyclerView;
+    private AdapterMovimentacao adapterMovimentacao;
+    private List<Movimentacao> movimentacoes = new ArrayList<>();
 
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
@@ -62,9 +71,19 @@ public class PrincipalActivity extends AppCompatActivity {
         txtSaudacao = findViewById(R.id.txt_saudacao);
         txtSaldo = findViewById(R.id.txt_saldo);
         calendarView = findViewById(R.id.calendarView);
+        recyclerView = findViewById(R.id.recycler_view);
 
         configurarCalendarView();
 
+
+        //configurar adapter
+        adapterMovimentacao = new AdapterMovimentacao(movimentacoes, this);
+
+        //configurar recylcerview
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(adapterMovimentacao);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
