@@ -92,6 +92,9 @@ public class ReceitaActivity extends AppCompatActivity {
             atualizaReceita(receitaTotal + valorRecuperado);
 
             movimentacao.salvar(dataEscolhida);
+
+            //fechar activity e volta a stack
+            finish();
         }
     }
 

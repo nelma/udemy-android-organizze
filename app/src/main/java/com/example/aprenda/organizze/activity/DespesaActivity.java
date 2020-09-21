@@ -65,6 +65,9 @@ public class DespesaActivity extends AppCompatActivity {
             atualizaDespesa(despesaTotal + valorRecuperado);
 
             movimentacao.salvar(dataEscolhida);
+
+            //fechar activity e volta a stack
+            finish();
         }
 
     }
