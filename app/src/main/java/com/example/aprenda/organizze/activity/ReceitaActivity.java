@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -118,28 +119,28 @@ public class ReceitaActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(ReceitaActivity.this,
                                 "Descrição não foi preenchido!",
-                                Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT).show();
                         return false;
                     }
 
                 } else {
                     Toast.makeText(ReceitaActivity.this,
                             "Categoria não foi preenchido!",
-                            Toast.LENGTH_SHORT);
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
             } else {
                 Toast.makeText(ReceitaActivity.this,
                         "Data não foi preenchida!",
-                        Toast.LENGTH_SHORT);
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
 
         } else {
             Toast.makeText(ReceitaActivity.this,
                     "Valor não foi preenchido!",
-                    Toast.LENGTH_SHORT);
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
     }

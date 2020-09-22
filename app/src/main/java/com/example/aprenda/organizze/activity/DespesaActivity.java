@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -92,28 +93,28 @@ public class DespesaActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(DespesaActivity.this,
                                 "Descrição não foi preenchido!",
-                                Toast.LENGTH_SHORT);
+                                Toast.LENGTH_SHORT).show();
                         return false;
                     }
 
                 } else {
                     Toast.makeText(DespesaActivity.this,
                             "Categoria não foi preenchido!",
-                            Toast.LENGTH_SHORT);
+                            Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
             } else {
                 Toast.makeText(DespesaActivity.this,
                         "Data não foi preenchida!",
-                        Toast.LENGTH_SHORT);
+                        Toast.LENGTH_SHORT).show();
                 return false;
             }
 
         } else {
             Toast.makeText(DespesaActivity.this,
                     "Valor não foi preenchido!",
-                    Toast.LENGTH_SHORT);
+                    Toast.LENGTH_SHORT).show();
             return false;
         }
     }
