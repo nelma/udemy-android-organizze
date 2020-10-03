@@ -1,18 +1,22 @@
 package com.example.aprenda.organizze.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.aprenda.organizze.adapter.AdapterMovimentacao;
 import com.example.aprenda.organizze.config.ConfiguracaoFirebase;
+import com.example.aprenda.organizze.enums.Tipo;
 import com.example.aprenda.organizze.helpers.Base64Custom;
 import com.example.aprenda.organizze.model.Movimentacao;
 import com.example.aprenda.organizze.model.Usuario;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +25,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.aprenda.organizze.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +55,7 @@ public class PrincipalActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AdapterMovimentacao adapterMovimentacao;
     private List<Movimentacao> movimentacoes = new ArrayList<>();
+    private Movimentacao movimentacao;
 
     private FirebaseAuth autenticacao = ConfiguracaoFirebase.getFirebaseAutenticacao();
     private DatabaseReference firebaseRef = ConfiguracaoFirebase.getFirebaseDatabase();
@@ -77,6 +83,7 @@ public class PrincipalActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_view);
 
         configurarCalendarView();
+        swipe();
 
 
         //configurar adapter
@@ -132,13 +139,13 @@ public class PrincipalActivity extends AppCompatActivity {
 
                 for(DataSnapshot dados: dataSnapshot.getChildren()) {
 
-
                     Movimentacao movimentacao = dados.getValue( Movimentacao.class );
+                    movimentacao.setKey(dados.getKey());
                     Log.i("Movimentacoes", "dados: "+ movimentacao.getCategoria());
                     movimentacoes.add(movimentacao);
                 }
 
-                //atualizat recyclerView
+                //atualizar recyclerView
                 adapterMovimentacao.notifyDataSetChanged();
             }
 
@@ -147,6 +154,91 @@ public class PrincipalActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+
+    public void swipe() {
+        final ItemTouchHelper.Callback itemTouch = new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+
+                //Definindo o movimento
+                int dragFlags = ItemTouchHelper.ACTION_STATE_IDLE;
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                Log.i("SWIPE", "item was swiped");
+                excluirMovimentacao(viewHolder);
+            }
+        };
+
+        new ItemTouchHelper(itemTouch).attachToRecyclerView(recyclerView);
+    }
+
+    private void excluirMovimentacao(final  RecyclerView.ViewHolder viewHolder) {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+        //configura AlertDialog
+        alertDialog.setTitle("Excluir Movimentação da Conta");
+        alertDialog.setMessage("Você tem certeza que deseja realmente excluir essa movimentação de sua conta?");
+        alertDialog.setCancelable(false);
+
+        alertDialog.setPositiveButton("Confirmar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                int position = (viewHolder.getAdapterPosition());
+                movimentacao = movimentacoes.get(position);
+
+                String emailUsuario = autenticacao.getCurrentUser().getEmail();
+                String idUsuario = Base64Custom.codificarBase64(emailUsuario);
+                movimentacaoRef = firebaseRef.child("movimentacao")
+                        .child(idUsuario)
+                        .child(mesAnoSelecionado);
+
+                movimentacaoRef.child(movimentacao.getKey()).removeValue();
+                adapterMovimentacao.notifyItemRemoved(position);
+                atualizarSaldo();
+            }
+        });
+
+        alertDialog.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Toast.makeText(PrincipalActivity.this,
+                        "Cancelado",
+                        Toast.LENGTH_SHORT).show();
+                adapterMovimentacao.notifyDataSetChanged();
+            }
+        });
+
+        AlertDialog alert = alertDialog.create();
+        alert.show();
+    }
+
+    private void atualizarSaldo() {
+
+        String emailUsuario = autenticacao.getCurrentUser().getEmail();
+        String idUsuario = Base64Custom.codificarBase64( emailUsuario );
+        usuarioRef = firebaseRef.child("usuarios").child( idUsuario );
+
+        if(movimentacao.getTipo().equals(Tipo.RECEITA.name())) {
+            receitaTotal = receitaTotal - movimentacao.getValor();
+            usuarioRef.child("receitaTotal").setValue(receitaTotal);
+
+        } else if(movimentacao.getTipo().equals(Tipo.DESPESA.name())) {
+            despesaTotal = despesaTotal - movimentacao.getValor();
+            usuarioRef.child("despesaTotal").setValue(despesaTotal);
+
+        }
     }
 
     private void recuperarResumo() {
@@ -215,7 +307,6 @@ public class PrincipalActivity extends AppCompatActivity {
 
     public void adicionarReceita(View view) {
         startActivity(new Intent(this, ReceitaActivity.class));
-
     }
 
     public void adicionarDespesa(View view) {
